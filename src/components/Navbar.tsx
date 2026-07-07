@@ -1,16 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const closeMenu = () => setIsOpen(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-white/80 backdrop-blur-md transition-colors dark:border-zinc-800/80 dark:bg-zinc-950/80">
       <div className="mx-auto flex max-w-7xl h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
         <div className="flex items-center gap-2">
-          <a href="#" className="flex items-center gap-2.5 group">
+          <Link href="/" className="flex items-center gap-2.5 group">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-emerald-500 text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -30,51 +33,51 @@ export default function Navbar() {
             <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
               Career<span className="bg-gradient-to-r from-blue-600 to-emerald-500 bg-clip-text text-transparent">Connect</span>
             </span>
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <a
+          <Link
             href="#"
             className="text-sm font-medium text-zinc-600 transition-colors hover:text-blue-600 dark:text-zinc-300 dark:hover:text-emerald-400"
           >
             Find Jobs
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-sm font-medium text-zinc-600 transition-colors hover:text-blue-600 dark:text-zinc-300 dark:hover:text-emerald-400"
           >
             Browse Companies
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-sm font-medium text-zinc-600 transition-colors hover:text-blue-600 dark:text-zinc-300 dark:hover:text-emerald-400"
           >
             Salary Guide
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="text-sm font-medium text-zinc-600 transition-colors hover:text-blue-600 dark:text-zinc-300 dark:hover:text-emerald-400"
           >
             Career Resources
-          </a>
+          </Link>
         </nav>
 
         {/* Action Buttons */}
         <div className="hidden md:flex items-center gap-4">
-          <a
-            href="#"
+          <Link
+            href="/login"
             className="text-sm font-medium text-zinc-700 transition-colors hover:text-blue-600 dark:text-zinc-300 dark:hover:text-emerald-400"
           >
             Sign In
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            href="/register"
             className="inline-flex h-10 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-emerald-500 px-5 text-sm font-semibold text-white shadow-sm hover:from-blue-700 hover:to-emerald-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all duration-200 hover:shadow-md hover:shadow-blue-500/10"
           >
             Post a Job
-          </a>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -117,43 +120,49 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors">
           <div className="space-y-1 px-4 py-4 sm:px-6">
-            <a
+            <Link
               href="#"
+              onClick={closeMenu}
               className="block rounded-lg px-3 py-2.5 text-base font-semibold text-zinc-900 hover:bg-zinc-50 dark:text-white dark:hover:bg-zinc-900"
             >
               Find Jobs
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
+              onClick={closeMenu}
               className="block rounded-lg px-3 py-2.5 text-base font-semibold text-zinc-900 hover:bg-zinc-50 dark:text-white dark:hover:bg-zinc-900"
             >
               Browse Companies
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
+              onClick={closeMenu}
               className="block rounded-lg px-3 py-2.5 text-base font-semibold text-zinc-900 hover:bg-zinc-50 dark:text-white dark:hover:bg-zinc-900"
             >
               Salary Guide
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
+              onClick={closeMenu}
               className="block rounded-lg px-3 py-2.5 text-base font-semibold text-zinc-900 hover:bg-zinc-50 dark:text-white dark:hover:bg-zinc-900"
             >
               Career Resources
-            </a>
+            </Link>
             <div className="border-t border-zinc-200 dark:border-zinc-800 my-4 pt-4 flex flex-col gap-3">
-              <a
-                href="#"
+              <Link
+                href="/login"
+                onClick={closeMenu}
                 className="flex w-full items-center justify-center rounded-lg py-2.5 text-base font-semibold text-zinc-900 hover:bg-zinc-50 dark:text-white dark:hover:bg-zinc-900"
               >
                 Sign In
-              </a>
-              <a
-                href="#"
+              </Link>
+              <Link
+                href="/register"
+                onClick={closeMenu}
                 className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-emerald-500 py-2.5 text-base font-semibold text-white shadow-sm hover:from-blue-700 hover:to-emerald-600 transition-all duration-200"
               >
                 Post a Job
-              </a>
+              </Link>
             </div>
           </div>
         </div>
