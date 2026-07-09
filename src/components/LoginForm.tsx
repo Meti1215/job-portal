@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const router = useRouter();
-  
+
   // Field States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,9 +32,9 @@ export default function LoginForm() {
     alert("Password reset instructions have been simulated! Please check your (mocked) inbox.");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Reset errors
     setEmailError("");
     setPasswordError("");
@@ -64,11 +64,35 @@ export default function LoginForm() {
 
     // Mock login execution
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // Simulate dashboard/homepage redirect
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+
+      alert(`Welcome ${data.user.fullName}!`);
+
       router.push("/");
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -117,11 +141,10 @@ export default function LoginForm() {
                 setEmail(e.target.value);
                 if (emailError) setEmailError("");
               }}
-              className={`block w-full rounded-xl border px-3.5 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${
-                emailError
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
-              }`}
+              className={`block w-full rounded-xl border px-3.5 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${emailError
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
+                }`}
             />
           </div>
           {emailError && (
@@ -160,11 +183,10 @@ export default function LoginForm() {
                 setPassword(e.target.value);
                 if (passwordError) setPasswordError("");
               }}
-              className={`block w-full rounded-xl border pl-3.5 pr-11 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${
-                passwordError
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
-              }`}
+              className={`block w-full rounded-xl border pl-3.5 pr-11 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${passwordError
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
+                }`}
             />
             {/* Eye toggle button */}
             <button

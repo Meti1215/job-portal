@@ -15,7 +15,7 @@ export default function RegisterForm() {
   const [role, setRole] = useState<UserRole>("seeker");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  
+
   // UI states
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +31,7 @@ export default function RegisterForm() {
     return emailRegex.test(val);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Reset Errors
@@ -79,11 +79,37 @@ export default function RegisterForm() {
 
     // Simulate Register call
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName,
+          email,
+          password,
+          role: role === "seeker" ? "JOB_SEEKER" : "EMPLOYER",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+
+      alert("Registration successful!");
+
+      router.push("/login");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong.");
+    } finally {
       setIsLoading(false);
-      // Success redirection back to main landing page
-      router.push("/");
-    }, 1500);
+    }
   };
 
   return (
@@ -116,11 +142,10 @@ export default function RegisterForm() {
             <button
               type="button"
               onClick={() => setRole("seeker")}
-              className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all cursor-pointer ${
-                role === "seeker"
-                  ? "border-blue-600 bg-blue-50/50 dark:border-emerald-500 dark:bg-emerald-950/20 shadow-sm"
-                  : "border-zinc-200 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900/50"
-              }`}
+              className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all cursor-pointer ${role === "seeker"
+                ? "border-blue-600 bg-blue-50/50 dark:border-emerald-500 dark:bg-emerald-950/20 shadow-sm"
+                : "border-zinc-200 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900/50"
+                }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -128,9 +153,8 @@ export default function RegisterForm() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className={`h-5 w-5 ${
-                  role === "seeker" ? "text-blue-600 dark:text-emerald-400" : "text-zinc-400"
-                }`}
+                className={`h-5 w-5 ${role === "seeker" ? "text-blue-600 dark:text-emerald-400" : "text-zinc-400"
+                  }`}
               >
                 <path
                   strokeLinecap="round"
@@ -146,11 +170,10 @@ export default function RegisterForm() {
             <button
               type="button"
               onClick={() => setRole("employer")}
-              className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all cursor-pointer ${
-                role === "employer"
-                  ? "border-blue-600 bg-blue-50/50 dark:border-emerald-500 dark:bg-emerald-950/20 shadow-sm"
-                  : "border-zinc-200 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900/50"
-              }`}
+              className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all cursor-pointer ${role === "employer"
+                ? "border-blue-600 bg-blue-50/50 dark:border-emerald-500 dark:bg-emerald-950/20 shadow-sm"
+                : "border-zinc-200 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900/50"
+                }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -158,9 +181,8 @@ export default function RegisterForm() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className={`h-5 w-5 ${
-                  role === "employer" ? "text-blue-600 dark:text-emerald-400" : "text-zinc-400"
-                }`}
+                className={`h-5 w-5 ${role === "employer" ? "text-blue-600 dark:text-emerald-400" : "text-zinc-400"
+                  }`}
               >
                 <path
                   strokeLinecap="round"
@@ -193,11 +215,10 @@ export default function RegisterForm() {
                 setFullName(e.target.value);
                 if (fullNameError) setFullNameError("");
               }}
-              className={`block w-full rounded-xl border px-3.5 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${
-                fullNameError
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
-              }`}
+              className={`block w-full rounded-xl border px-3.5 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${fullNameError
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
+                }`}
             />
           </div>
           {fullNameError && (
@@ -227,11 +248,10 @@ export default function RegisterForm() {
                 setEmail(e.target.value);
                 if (emailError) setEmailError("");
               }}
-              className={`block w-full rounded-xl border px-3.5 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${
-                emailError
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
-              }`}
+              className={`block w-full rounded-xl border px-3.5 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${emailError
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
+                }`}
             />
           </div>
           {emailError && (
@@ -260,11 +280,10 @@ export default function RegisterForm() {
                 setPassword(e.target.value);
                 if (passwordError) setPasswordError("");
               }}
-              className={`block w-full rounded-xl border pl-3.5 pr-11 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${
-                passwordError
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
-              }`}
+              className={`block w-full rounded-xl border pl-3.5 pr-11 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${passwordError
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
+                }`}
             />
             {/* Eye toggle button */}
             <button
@@ -336,11 +355,10 @@ export default function RegisterForm() {
                 setConfirmPassword(e.target.value);
                 if (confirmPasswordError) setConfirmPasswordError("");
               }}
-              className={`block w-full rounded-xl border pl-3.5 pr-11 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${
-                confirmPasswordError
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
-              }`}
+              className={`block w-full rounded-xl border pl-3.5 pr-11 py-2.5 text-sm transition-all focus:outline-none focus:ring-1 bg-white dark:bg-zinc-900 dark:text-white ${confirmPasswordError
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : "border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-800 dark:focus:border-emerald-500 dark:focus:ring-emerald-500/20"
+                }`}
             />
           </div>
           {confirmPasswordError && (
