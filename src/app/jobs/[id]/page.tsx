@@ -1,6 +1,6 @@
-import DeleteJobButton from "@/components/DeleteJobButton";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import DeleteJobButton from "@/components/DeleteJobButton";
 
 async function getJob(id: string) {
     const res = await fetch(`http://localhost:3000/api/jobs/${id}`, {
@@ -27,45 +27,82 @@ export default async function JobDetailsPage({
     }
 
     return (
-        <main className="max-w-4xl mx-auto p-8">
-            <div className="rounded-lg border bg-white p-8 shadow">
-                <h1 className="text-4xl font-bold">{job.title}</h1>
+        <main className="min-h-screen bg-gray-50 py-10">
+            <div className="mx-auto max-w-5xl px-6">
+                <div className="rounded-2xl bg-white p-8 shadow-lg">
 
-                <p className="mt-2 text-xl text-gray-600">
-                    {job.company}
-                </p>
+                    <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
 
-                <div className="mt-6 space-y-2">
-                    <p>
-                        <strong>📍 Location:</strong> {job.location}
-                    </p>
+                        <div>
+                            <h1 className="text-4xl font-bold text-gray-900">
+                                {job.title}
+                            </h1>
 
-                    <p>
-                        <strong>💰 Salary:</strong> {job.salary}
-                    </p>
+                            <p className="mt-2 text-xl font-semibold text-blue-600">
+                                {job.company}
+                            </p>
+                        </div>
 
-                    <p>
-                        <strong>🧳 Job Type:</strong> {job.jobType}
-                    </p>
-                </div>
+                        <span className="rounded-full bg-blue-100 px-5 py-2 text-sm font-semibold text-blue-700">
+                            {job.jobType}
+                        </span>
 
-                <hr className="my-6" />
+                    </div>
 
-                <h2 className="mb-3 text-2xl font-semibold">
-                    Job Description
-                </h2>
+                    <div className="mt-8 grid gap-4 md:grid-cols-2">
 
-                <p className="leading-7">{job.description}</p>
+                        <div className="rounded-xl bg-gray-100 p-4">
+                            <p className="text-sm text-gray-500">Location</p>
+                            <p className="mt-1 text-lg font-semibold">
+                                📍 {job.location}
+                            </p>
+                        </div>
 
-                <div className="mt-8 flex gap-4">
-                    <Link
-                        href={`/jobs/${job.id}/edit`}
-                        className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                    >
-                        Edit Job
-                    </Link>
+                        <div className="rounded-xl bg-green-100 p-4">
+                            <p className="text-sm text-green-700">Salary</p>
+                            <p className="mt-1 text-lg font-bold text-green-700">
+                                💰 {job.salary}
+                            </p>
+                        </div>
 
-                    <DeleteJobButton id={job.id} />
+                    </div>
+
+                    <div className="mt-10">
+                        <h2 className="mb-4 text-2xl font-bold">
+                            Job Description
+                        </h2>
+
+                        <p className="leading-8 text-gray-700">
+                            {job.description}
+                        </p>
+                    </div>
+
+                    <div className="mt-10 flex flex-wrap gap-4">
+                        <Link
+                            href={`/jobs/${job.id}/apply`}
+                            className="rounded-lg bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700"
+                        >
+                            Apply Now
+                        </Link>
+
+                        <Link
+                            href={`/jobs/${job.id}/edit`}
+                            className="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
+                        >
+                            Edit Job
+                        </Link>
+
+                        <DeleteJobButton id={job.id} />
+
+                        <Link
+                            href="/jobs"
+                            className="rounded-lg border border-gray-300 px-6 py-3 font-semibold transition hover:bg-gray-100"
+                        >
+                            Back to Jobs
+                        </Link>
+
+                    </div>
+
                 </div>
             </div>
         </main>

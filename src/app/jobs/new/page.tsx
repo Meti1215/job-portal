@@ -14,106 +14,152 @@ export default function NewJobPage() {
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
         setLoading(true);
 
-        try {
-            const response = await fetch("/api/jobs", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title,
-                    company,
-                    location,
-                    salary,
-                    jobType,
-                    description,
-                }),
-            });
+        const response = await fetch("/api/jobs", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                title,
+                company,
+                location,
+                salary,
+                jobType,
+                description,
+            }),
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            if (!response.ok) {
-                alert(data.message);
-                return;
-            }
+        setLoading(false);
 
-            alert("Job posted successfully!");
-
-            router.push("/");
-        } catch (error) {
-            console.error(error);
-            alert("Something went wrong.");
-        } finally {
-            setLoading(false);
+        if (!response.ok) {
+            alert(data.message);
+            return;
         }
-    };
+
+        alert("Job posted successfully!");
+
+        router.push("/jobs");
+        router.refresh();
+    }
 
     return (
-        <div className="max-w-2xl mx-auto mt-10 p-6">
-            <h1 className="text-3xl font-bold mb-6">Post a Job</h1>
+        <main className="min-h-screen bg-gray-50 py-12">
+            <div className="mx-auto max-w-3xl px-6">
+                <div className="rounded-2xl bg-white p-8 shadow-lg">
+                    <h1 className="text-4xl font-bold text-gray-900">
+                        Post a New Job
+                    </h1>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                    className="w-full border p-3 rounded"
-                    placeholder="Job Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
+                    <p className="mt-2 text-gray-600">
+                        Fill in the details below to publish your job opening.
+                    </p>
 
-                <input
-                    className="w-full border p-3 rounded"
-                    placeholder="Company"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                />
+                    <form
+                        onSubmit={handleSubmit}
+                        className="mt-8 space-y-6"
+                    >
+                        <div>
+                            <label className="mb-2 block font-medium">
+                                Job Title
+                            </label>
 
-                <input
-                    className="w-full border p-3 rounded"
-                    placeholder="Location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                />
+                            <input
+                                className="w-full rounded-lg border p-3 focus:border-blue-500 focus:outline-none"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Frontend Developer"
+                            />
+                        </div>
 
-                <input
-                    className="w-full border p-3 rounded"
-                    placeholder="Salary"
-                    value={salary}
-                    onChange={(e) => setSalary(e.target.value)}
-                />
+                        <div>
+                            <label className="mb-2 block font-medium">
+                                Company
+                            </label>
 
-                <select
-                    className="w-full border p-3 rounded"
-                    value={jobType}
-                    onChange={(e) => setJobType(e.target.value)}
-                >
-                    <option>Full-Time</option>
-                    <option>Part-Time</option>
-                    <option>Remote</option>
-                    <option>Hybrid</option>
-                    <option>Contract</option>
-                </select>
+                            <input
+                                className="w-full rounded-lg border p-3 focus:border-blue-500 focus:outline-none"
+                                value={company}
+                                onChange={(e) => setCompany(e.target.value)}
+                                placeholder="Google"
+                            />
+                        </div>
 
-                <textarea
-                    className="w-full border p-3 rounded"
-                    rows={6}
-                    placeholder="Job Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <div>
+                                <label className="mb-2 block font-medium">
+                                    Location
+                                </label>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
-                >
-                    {loading ? "Posting..." : "Post Job"}
-                </button>
-            </form>
-        </div>
+                                <input
+                                    className="w-full rounded-lg border p-3 focus:border-blue-500 focus:outline-none"
+                                    value={location}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                    placeholder="Addis Ababa"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="mb-2 block font-medium">
+                                    Salary
+                                </label>
+
+                                <input
+                                    className="w-full rounded-lg border p-3 focus:border-blue-500 focus:outline-none"
+                                    value={salary}
+                                    onChange={(e) => setSalary(e.target.value)}
+                                    placeholder="$2,000/month"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="mb-2 block font-medium">
+                                Job Type
+                            </label>
+
+                            <select
+                                className="w-full rounded-lg border p-3 focus:border-blue-500 focus:outline-none"
+                                value={jobType}
+                                onChange={(e) => setJobType(e.target.value)}
+                            >
+                                <option>Full-Time</option>
+                                <option>Part-Time</option>
+                                <option>Internship</option>
+                                <option>Remote</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="mb-2 block font-medium">
+                                Description
+                            </label>
+
+                            <textarea
+                                rows={6}
+                                className="w-full rounded-lg border p-3 focus:border-blue-500 focus:outline-none"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="Describe the job responsibilities..."
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:bg-gray-400"
+                        >
+                            {loading ? "Posting..." : "Post Job"}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
     );
 }

@@ -12,6 +12,13 @@ export async function GET(
             where: {
                 id,
             },
+            include: {
+                applications: {
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                },
+            },
         });
 
         if (!job) {
@@ -26,36 +33,12 @@ export async function GET(
         console.error(error);
 
         return NextResponse.json(
-            { message: "Internal Server Error." },
+            { message: "Failed to fetch job." },
             { status: 500 }
         );
     }
 }
-export async function DELETE(
-    request: Request,
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const { id } = await params;
 
-        await prisma.job.delete({
-            where: {
-                id,
-            },
-        });
-
-        return NextResponse.json({
-            message: "Job deleted successfully.",
-        });
-    } catch (error) {
-        console.error(error);
-
-        return NextResponse.json(
-            { message: "Failed to delete job." },
-            { status: 500 }
-        );
-    }
-}
 export async function PUT(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
@@ -113,6 +96,32 @@ export async function PUT(
 
         return NextResponse.json(
             { message: "Failed to update job." },
+            { status: 500 }
+        );
+    }
+}
+
+export async function DELETE(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { id } = await params;
+
+        await prisma.job.delete({
+            where: {
+                id,
+            },
+        });
+
+        return NextResponse.json({
+            message: "Job deleted successfully.",
+        });
+    } catch (error) {
+        console.error(error);
+
+        return NextResponse.json(
+            { message: "Failed to delete job." },
             { status: 500 }
         );
     }

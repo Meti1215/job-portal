@@ -31,5 +31,18 @@ model Job {
   jobType     String
 
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @updatedAt 
+  applications Application[]
+} 
+model Application {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  phone        String
+  coverLetter  String
+
+  jobId        String
+  job          Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now())
 }
